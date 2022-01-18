@@ -25,7 +25,7 @@ int hash = data.GetMurmur32BitsX86();
 using MurmurHash;
   
 byte[] data = Encoding.UTF8.GetBytes("Hello MurmurHash3");
-int hash = data.GetMurmur32BitsX86(**12345**);
+int hash = data.GetMurmur32BitsX86(12345);
 ```
   
   
