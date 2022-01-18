@@ -29,12 +29,14 @@
 // original-header
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static System.Numerics.BitOperations;
 
 namespace MurmurHash;
 public static class MurmurHashExtensions
 {
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static uint fmix32(uint h)
 	{
 		h ^= h >> 16;
@@ -45,6 +47,7 @@ public static class MurmurHashExtensions
 
 		return h;
 	}
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static ulong fmix64(ulong k)
 	{
 		k ^= k >> 33;
