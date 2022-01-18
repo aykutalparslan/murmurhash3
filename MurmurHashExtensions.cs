@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright(c) 2022 Aykut Alparslan KOC <aykutalparslan@msn.com>
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,18 +30,11 @@
 
 using System;
 using System.Runtime.InteropServices;
+using static System.Numerics.BitOperations;
 
 namespace MurmurHash;
 public static class MurmurHashExtensions
 {
-	private static uint rotl32(uint x, byte r)
-	{
-		return (x << r) | (x >> (32 - r));
-	}
-	private static ulong rotl64(ulong x, byte r)
-	{
-		return (x << r) | (x >> (64 - r));
-	}
 	private static uint fmix32(uint h)
 	{
 		h ^= h >> 16;
@@ -71,8 +64,8 @@ public static class MurmurHashExtensions
 		return GetMurmurHash32BitsX86(data, seed);
 	}
 	public static int GetMurmur32BitsX86(this ReadOnlySpan<byte> data, uint seed = 0)
-    {
-		return GetMurmurHash32BitsX86(data,seed);
+	{
+		return GetMurmurHash32BitsX86(data, seed);
 	}
 	private static int GetMurmurHash32BitsX86(ReadOnlySpan<byte> data, uint seed)
 	{
@@ -90,11 +83,11 @@ public static class MurmurHashExtensions
 			k1 = blocks[i];
 
 			k1 *= c1;
-			k1 = rotl32(k1, 15);
+			k1 = RotateLeft(k1, 15);
 			k1 *= c2;
 
 			h1 ^= k1;
-			h1 = rotl32(h1, 13);
+			h1 = RotateLeft(h1, 13);
 			h1 = h1 * 5 + 0xe6546b64;
 		}
 
@@ -111,7 +104,7 @@ public static class MurmurHashExtensions
 				goto case 1;
 			case 1:
 				k1 ^= ((uint)data[nblocks * 4]);
-				k1 *= c1; k1 = rotl32(k1, 15); k1 *= c2; h1 ^= k1;
+				k1 *= c1; k1 = RotateLeft(k1, 15); k1 *= c2; h1 ^= k1;
 				break;
 		};
 
@@ -129,9 +122,9 @@ public static class MurmurHashExtensions
 		return GetMurmurHash128BitsX86(data, seed);
 	}
 	public static uint[] GetMurmur128BitsX86(this ReadOnlySpan<byte> data, uint seed = 0)
-    {
+	{
 		return GetMurmurHash128BitsX86(data, seed);
-    }
+	}
 	private static uint[] GetMurmurHash128BitsX86(ReadOnlySpan<byte> data, uint seed)
 	{
 		int nblocks = data.Length / 16;
@@ -160,21 +153,21 @@ public static class MurmurHashExtensions
 			k3 = blocks[i * 4 + 2];
 			k4 = blocks[i * 4 + 3];
 
-			k1 *= c1; k1 = rotl32(k1, 15); k1 *= c2; h1 ^= k1;
+			k1 *= c1; k1 = RotateLeft(k1, 15); k1 *= c2; h1 ^= k1;
 
-			h1 = rotl32(h1, 19); h1 += h2; h1 = h1 * 5 + 0x561ccd1b;
+			h1 = RotateLeft(h1, 19); h1 += h2; h1 = h1 * 5 + 0x561ccd1b;
 
-			k2 *= c2; k2 = rotl32(k2, 16); k2 *= c3; h2 ^= k2;
+			k2 *= c2; k2 = RotateLeft(k2, 16); k2 *= c3; h2 ^= k2;
 
-			h2 = rotl32(h2, 17); h2 += h3; h2 = h2 * 5 + 0x0bcaa747;
+			h2 = RotateLeft(h2, 17); h2 += h3; h2 = h2 * 5 + 0x0bcaa747;
 
-			k3 *= c3; k3 = rotl32(k3, 17); k3 *= c4; h3 ^= k3;
+			k3 *= c3; k3 = RotateLeft(k3, 17); k3 *= c4; h3 ^= k3;
 
-			h3 = rotl32(h3, 15); h3 += h4; h3 = h3 * 5 + 0x96cd1c35;
+			h3 = RotateLeft(h3, 15); h3 += h4; h3 = h3 * 5 + 0x96cd1c35;
 
-			k4 *= c4; k4 = rotl32(k4, 18); k4 *= c1; h4 ^= k4;
+			k4 *= c4; k4 = RotateLeft(k4, 18); k4 *= c1; h4 ^= k4;
 
-			h4 = rotl32(h4, 13); h4 += h1; h4 = h4 * 5 + 0x32ac3b17;
+			h4 = RotateLeft(h4, 13); h4 += h1; h4 = h4 * 5 + 0x32ac3b17;
 		}
 
 		k1 = 0;
@@ -192,7 +185,7 @@ public static class MurmurHashExtensions
 				goto case 13;
 			case 13:
 				k4 ^= (uint)data[nblocks * 16 + 12] << 0;
-				k4 *= c4; k4 = rotl32(k4, 18); k4 *= c1; h4 ^= k4;
+				k4 *= c4; k4 = RotateLeft(k4, 18); k4 *= c1; h4 ^= k4;
 				goto case 12;
 			case 12:
 				k3 ^= (uint)data[nblocks * 16 + 11] << 24;
@@ -205,7 +198,7 @@ public static class MurmurHashExtensions
 				goto case 9;
 			case 9:
 				k3 ^= (uint)data[nblocks * 16 + 8] << 0;
-				k3 *= c3; k3 = rotl32(k3, 17); k3 *= c4; h3 ^= k3;
+				k3 *= c3; k3 = RotateLeft(k3, 17); k3 *= c4; h3 ^= k3;
 				goto case 8;
 			case 8:
 				k2 ^= (uint)data[nblocks * 16 + 7] << 24;
@@ -218,7 +211,7 @@ public static class MurmurHashExtensions
 				goto case 5;
 			case 5:
 				k2 ^= (uint)data[nblocks * 16 + 4] << 0;
-				k2 *= c2; k2 = rotl32(k2, 16); k2 *= c3; h2 ^= k2;
+				k2 *= c2; k2 = RotateLeft(k2, 16); k2 *= c3; h2 ^= k2;
 				goto case 4;
 			case 4:
 				k1 ^= (uint)data[nblocks * 16 + 3] << 24;
@@ -231,7 +224,7 @@ public static class MurmurHashExtensions
 				goto case 1;
 			case 1:
 				k1 ^= (uint)data[nblocks * 16 + 0] << 0;
-				k1 *= c1; k1 = rotl32(k1, 15); k1 *= c2; h1 ^= k1;
+				k1 *= c1; k1 = RotateLeft(k1, 15); k1 *= c2; h1 ^= k1;
 				break;
 		};
 
@@ -259,9 +252,9 @@ public static class MurmurHashExtensions
 		return GetMurmurHash128BitsX64(data, seed);
 	}
 	public static ulong[] GetMurmur128BitsX64(this ReadOnlySpan<byte> data, uint seed = 0)
-    {
+	{
 		return GetMurmurHash128BitsX64(data, seed);
-    }
+	}
 	private static ulong[] GetMurmurHash128BitsX64(ReadOnlySpan<byte> data, uint seed)
 	{
 		int nblocks = data.Length / 16;
@@ -282,13 +275,13 @@ public static class MurmurHashExtensions
 			k1 = blocks[i * 2];
 			k2 = blocks[i * 2 + 1];
 
-			k1 *= c1; k1 = rotl64(k1, 31); k1 *= c2; h1 ^= k1;
+			k1 *= c1; k1 = RotateLeft(k1, 31); k1 *= c2; h1 ^= k1;
 
-			h1 = rotl64(h1, 27); h1 += h2; h1 = h1 * 5 + 0x52dce729;
+			h1 = RotateLeft(h1, 27); h1 += h2; h1 = h1 * 5 + 0x52dce729;
 
-			k2 *= c2; k2 = rotl64(k2, 33); k2 *= c1; h2 ^= k2;
+			k2 *= c2; k2 = RotateLeft(k2, 33); k2 *= c1; h2 ^= k2;
 
-			h2 = rotl64(h2, 31); h2 += h1; h2 = h2 * 5 + 0x38495ab5;
+			h2 = RotateLeft(h2, 31); h2 += h1; h2 = h2 * 5 + 0x38495ab5;
 		}
 
 		k1 = 0;
@@ -316,7 +309,7 @@ public static class MurmurHashExtensions
 				goto case 9;
 			case 9:
 				k2 ^= ((ulong)data[nblocks * 16 + 8]) << 0;
-				k2 *= c2; k2 = rotl64(k2, 33); k2 *= c1; h2 ^= k2;
+				k2 *= c2; k2 = RotateLeft(k2, 33); k2 *= c1; h2 ^= k2;
 				goto case 8;
 			case 8:
 				k1 ^= ((ulong)data[nblocks * 16 + 7]) << 56;
@@ -341,7 +334,7 @@ public static class MurmurHashExtensions
 				goto case 1;
 			case 1:
 				k1 ^= ((ulong)data[nblocks * 16]) << 0;
-				k1 *= c1; k1 = rotl64(k1, 31); k1 *= c2; h1 ^= k1;
+				k1 *= c1; k1 = RotateLeft(k1, 31); k1 *= c2; h1 ^= k1;
 				break;
 		};
 
@@ -358,5 +351,3 @@ public static class MurmurHashExtensions
 		return new[] { h1, h2 };
 	}
 }
-
-
