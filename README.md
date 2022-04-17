@@ -12,7 +12,7 @@ to the following types:
 
   
 **Can be used as follows:**
-```
+```csharp
 using MurmurHash;
   
 byte[] data = Encoding.UTF8.GetBytes("Hello MurmurHash3");
@@ -21,7 +21,7 @@ int hash = data.GetMurmur32BitsX86();
   
   
 ***seed*** is an optional parameter
-```
+```csharp
 using MurmurHash;
   
 byte[] data = Encoding.UTF8.GetBytes("Hello MurmurHash3");
@@ -30,7 +30,7 @@ int hash = data.GetMurmur32BitsX86(12345);
   
   
 For the **128 bit** versions you can use following snippets to convert the return values to byte[] respectively
-```
+```csharp
 using MurmurHash;
 using System.Runtime.InteropServices;
   
